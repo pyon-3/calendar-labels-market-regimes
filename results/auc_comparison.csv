@@ -1,0 +1,5 @@
+model,in_sample_auc,features
+calendar_only,0.5313064654588879,MR
+regime_only,0.6963786982063304,"VIX_level,MOVE_level,US10Y_5d_change,DXY_5d_change,realized_vol_20d,MID,UMID,ShockSimilarity"
+calendar_plus_regime,0.6994089051971111,"MR,VIX_level,MOVE_level,US10Y_5d_change,DXY_5d_change,realized_vol_20d,MID,UMID,ShockSimilarity"
+full_interactions,0.6996769266043918,"MR,VIX_level,MOVE_level,US10Y_5d_change,DXY_5d_change,realized_vol_20d,MID,UMID,ShockSimilarity,MR_x_UMID,MR_x_ShockSimilarity"

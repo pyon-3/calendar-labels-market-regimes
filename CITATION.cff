@@ -1,0 +1,16 @@
+cff-version: 1.2.0
+title: "Calendar Labels and Market Instability Regimes: A Case Study of Mercury Retrograde"
+message: "If you use or discuss this work, please cite this repository."
+type: dataset
+authors:
+  - name: "pyon"
+version: "0.1"
+date-released: "2026-05-23"
+license: "CC-BY-NC-4.0"
+keywords:
+  - market regimes
+  - volatility
+  - calendar anomalies
+  - Mercury retrograde
+  - behavioral finance
+  - anomaly detection
