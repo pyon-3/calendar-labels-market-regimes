@@ -44,7 +44,7 @@ The core question is whether a popular narrative label has independent predictiv
 | Calendar + regime | 0.699 |
 | Full interactions | 0.700 |
 
-Mercury retrograde alone provides only weak predictive power.  
+Mercury retrograde alone provides only weak predictive power.
 Adding market regime variables substantially improves classification performance, while adding the calendar label to the regime model provides only a marginal improvement.
 
 Source: `results/auc_comparison.csv`
@@ -65,6 +65,7 @@ The elevated crash rate for Mercury × High UMID is an interesting conditional p
 水星逆行 × 高UMID のクラッシュ率は興味深い条件付きパターンですが、ロジスティック回帰の交互作用項は安定して有意とは言えませんでした。そのため、単独の売買シグナルとして解釈すべきではありません。
 
 Source: `results/conditional_probabilities.csv`
+
 
 ## Repository Structure
 
