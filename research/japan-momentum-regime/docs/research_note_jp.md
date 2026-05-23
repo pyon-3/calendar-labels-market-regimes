@@ -1,0 +1,195 @@
+# 日本株モメンタム例外性の再検証
+
+- データ: Yahoo Finance downloaded through 2026-05-22; NikkeiVI_Futures skipped: no J-Quants rows returned
+- 生成日: 2026-05-23
+- 注意: 個別株ユニバースはYahoo Financeで再現しやすいテーマ株プロキシであり、TOPIX500完全構成銘柄の正式検証ではない。
+
+## 結論
+
+日本株は「常にモメンタムが存在しない例外市場」と見るより、広範なクロスセクションでは長期に弱く、テーマ・大型・外需・半導体レジームでは強く出る条件付き市場と見る方が実証結果に近い。
+Time-Series Momentumは日本株指数でも観測されるが、米国株やSOXほど安定的ではない。一方、2023年以降は円安、半導体、東証改革、低ボラ局面が重なり、日本株指数とテーマ株内モメンタムが同時に強まった。
+
+## 文献整理
+
+- Moskowitz, Ooi and Pedersen (2012): 複数資産で過去12か月トレンドが翌月リターンを予測するTime-Series Momentumを提示。
+- Asness, Moskowitz and Pedersen (2013): ValueとMomentumは国際的・資産横断的に観測されるが、日本株は弱い例外として扱われやすい。
+- Asness (2011): 日本のモメンタム例外性を強調。ただし、これは主にCross-Sectional Momentumの長期平均に関する議論。
+- Fama and French (2012): 国際株式のSize, Value, Momentumを比較し、日本のMomentumプレミアムの弱さを確認。
+- Hanauer: 日本でも条件を分けるとMomentumが観測される可能性を示し、無条件平均だけで「日本は違う」と結論しない立場。
+
+## Time-Series Momentum: 2023年以降の上位
+
+| market | ann_return | sharpe | max_drawdown | excess_ann_return_vs_bh |
+| --- | --- | --- | --- | --- |
+| TOPIX_ETF_1308 | 0.236 | 1.876 | -0.104 | -0.028 |
+| SP500_SPY | 0.198 | 1.607 | -0.083 | -0.033 |
+| Nasdaq100_QQQ | 0.242 | 1.540 | -0.101 | -0.102 |
+| Taiwan_EWT | 0.301 | 1.438 | -0.096 | -0.069 |
+| Nikkei225 | 0.242 | 1.239 | -0.132 | -0.055 |
+| SOX | 0.332 | 1.117 | -0.227 | -0.252 |
+| Germany_EWG | 0.139 | 0.908 | -0.141 | -0.059 |
+| Korea_EWY | 0.213 | 0.622 | -0.250 | -0.226 |
+
+日本株指数の代表的な12か月・直近1か月除外・ロング/キャッシュ型では、2023年以降の成績が過去期間より改善している。特に日経平均/TOPIX系は、買い持ちとの差が常に大きいわけではないが、ドローダウン抑制と勝率改善に寄与しやすい。
+
+## Cross-Sectional Momentum: 期間別
+
+| universe | ann_return | sharpe | max_drawdown | months |
+| --- | --- | --- | --- | --- |
+| ai_infra | 0.731 | 1.145 | -0.477 | 41 |
+| low_pbr_reform_proxy | 0.219 | 0.589 | -0.265 | 41 |
+| defense | 0.213 | 0.429 | -0.574 | 41 |
+| semiconductor_related | 0.190 | 0.455 | -0.398 | 41 |
+| all_theme_watchlist | 0.152 | 0.456 | -0.359 | 41 |
+| ff_japan_broad_wml | 0.033 | 0.359 | -0.085 | 39 |
+
+Fama-Frenchの日本WMLは長期では力強い右肩上がりではない。一方、半導体・AIインフラ・低PBR改革などの限定ユニバースでは、2023年以降のWMLまたはWinnerロングの寄与が大きい。これは「日本市場全体の恒常的Momentum」ではなく「テーマ内で資金が集中する局面のMomentum」と解釈すべき。
+
+### Fama-French Japan WML
+
+| universe | period | months | ann_return | ann_vol | sharpe | max_drawdown | win_rate | calmar | avg_n |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| ff_japan_broad_wml | 2001-2012 | 144 | 0.005 | 0.132 | 0.039 | -0.394 | 0.590 | 0.013 | n/a |
+| ff_japan_broad_wml | 2013-2019 | 84 | -0.007 | 0.109 | -0.068 | -0.263 | 0.560 | -0.028 | n/a |
+| ff_japan_broad_wml | 2020-2022 | 36 | -0.015 | 0.109 | -0.134 | -0.206 | 0.556 | -0.071 | n/a |
+| ff_japan_broad_wml | 2023-present | 39 | 0.033 | 0.093 | 0.359 | -0.085 | 0.513 | 0.393 | n/a |
+
+## 1987年・バブル・IT・郵政相場の仮想VI検証
+
+日経VI先物が存在しない期間は、日経平均の日次リターンから20営業日・60営業日の年率実現ボラティリティを合成した `Synthetic_NikkeiVI` を使った。これは公式の日経VIではなく、過去局面を同じ尺度で比較するための仮想VI proxyである。J-Quantsの `NKVIF` が利用可能なプランでは、2012年以降は `NikkeiVI_Futures` を優先し、それ以前を仮想VIで補完する。
+
+| event | start | end | months | nikkei_return | nikkei_max_drawdown | tsmom_return | tsmom_sharpe | avg_vi_proxy | max_vi_proxy | vi_proxy_source |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| 1987_global_crash | 1987-01-31 | 1988-12-31 | 24 | 0.504 | -0.172 | 0.602 | 1.642 | 17.324 | 65.196 | NikkeiVI_Proxy |
+| 1989_1990_japan_bubble_peak | 1988-01-31 | 1990-12-31 | 36 | 0.010 | -0.461 | 0.372 | 0.796 | 16.150 | 45.409 | NikkeiVI_Proxy |
+| 2000_it_bubble_unwind | 1999-01-31 | 2001-12-31 | 36 | -0.273 | -0.519 | -0.024 | -0.063 | 23.306 | 41.978 | NikkeiVI_Proxy |
+| 2005_2006_postal_reform_market | 2005-01-31 | 2006-12-31 | 24 | 0.513 | -0.094 | 0.366 | 1.159 | 16.293 | 28.452 | NikkeiVI_Proxy |
+| 2006_livedoor_boj_normalization | 2006-01-31 | 2006-12-31 | 12 | 0.035 | -0.094 | 0.069 | 0.528 | 19.692 | 28.452 | NikkeiVI_Proxy |
+| 2023_tse_reform_ai_semis | 2023-01-31 | 2026-05-31 | 41 | 1.318 | -0.132 | 1.096 | 1.239 | 21.035 | 59.506 | NikkeiVI_Proxy |
+
+## ITバブル崩壊後 2002-2005 の受け皿
+
+2000年型に近づくなら、下落後にどこへ資金が移るかを見る必要がある。Yahoo Financeで長期取得できる個別株から、銀行・不動産・商社・鉄鋼非鉄・自動車・機械・電機精密・通信ネット・小売・医薬・公益の等ウェイトproxyを作った。
+
+| window | sector_proxy | start | end | members_used | total_return | ann_return | sharpe | max_drawdown | excess_vs_nikkei |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| post_it_bubble_2002_2005 | TradingCompanies | 2002-01-31 | 2005-12-31 | 8058.T,8031.T,8001.T,8002.T | 3.182 | 0.441 | 1.577 | -0.293 | 2.571 |
+| post_it_bubble_2002_2005 | RealEstate | 2002-01-31 | 2005-12-31 | 8801.T,8802.T,8830.T | 2.538 | 0.381 | 1.145 | -0.439 | 1.926 |
+| post_it_bubble_2002_2005 | RetailConsumer | 2002-01-31 | 2005-12-31 | 3382.T,8267.T,9983.T | 2.247 | 0.351 | 1.206 | -0.232 | 1.636 |
+| post_it_bubble_2002_2005 | Machinery | 2002-01-31 | 2005-12-31 | 6301.T,6367.T,6326.T | 2.132 | 0.338 | 1.718 | -0.180 | 1.521 |
+| post_it_bubble_2002_2005 | Banks | 2002-01-31 | 2005-12-31 | 8306.T,8316.T,8411.T | 1.876 | 0.310 | 0.611 | -0.751 | 1.264 |
+| post_it_bubble_2002_2005 | TelecomInternet | 2002-01-31 | 2005-12-31 | 9432.T,9433.T,4689.T | 1.595 | 0.276 | 0.990 | -0.240 | 0.983 |
+| post_it_bubble_2002_2005 | SteelNonferrous | 2002-01-31 | 2005-12-31 | 5401.T,5411.T,5713.T,5801.T | 1.516 | 0.266 | 0.918 | -0.389 | 0.904 |
+| post_it_bubble_2002_2005 | Securities | 2002-01-31 | 2005-12-31 | 8604.T,8601.T | 1.030 | 0.198 | 0.615 | -0.441 | 0.418 |
+| post_it_bubble_2002_2005 | Autos | 2002-01-31 | 2005-12-31 | 7203.T,7201.T,7267.T,7261.T | 0.838 | 0.168 | 0.934 | -0.289 | 0.227 |
+| post_it_bubble_2002_2005 | PharmaDefensive | 2002-01-31 | 2005-12-31 | 4502.T,4503.T,4519.T | 0.585 | 0.125 | 0.851 | -0.228 | -0.027 |
+| post_it_bubble_2002_2005 | Utilities | 2002-01-31 | 2005-12-31 | 9501.T,9502.T,9503.T | 0.410 | 0.092 | 0.804 | -0.091 | -0.201 |
+| post_it_bubble_2002_2005 | ElectronicsPrecision | 2002-01-31 | 2005-12-31 | 6758.T,6501.T,6702.T,7735.T | 0.388 | 0.087 | 0.320 | -0.537 | -0.223 |
+
+この局面では、IT/通信の崩壊後に、金融正常化・不動産・素材/鉄鋼・商社・外需製造など、バランスシート修復と景気回復にレバレッジのある領域が次の受け皿になりやすい。現在がITバブル崩壊型へ近づくなら、半導体/AIの崩れだけでなく、次の資金受け皿がディフェンシブなのか、金融・資本財・内需再評価なのかを追うべき。
+
+## 1987年クラッシュ後から1989年バブル天井まで
+
+1987年クラッシュ後は、2002-2005とは違い、日本のバブル終盤そのものだった。ただしYahoo Financeで取得できる日本個別株履歴は1987-1989まで十分に遡れなかったため、このスクリプトのセクターproxy実証は作成できない。指数・仮想VIでは、1987年後の反発から1989年天井までは高ボラを消化しながら上昇トレンドが残った局面として確認できる。
+
+1987-1989セクターproxy表は作成できなかった。
+
+## 2007年バブル崩壊・金融危機後
+
+2007年以降は、危機を含む2007-2012と、底打ち後の2009-2012を分けた。前者は下落耐性、後者は次の受け皿を確認する窓である。
+
+| window | sector_proxy | start | end | members_used | total_return | ann_return | sharpe | max_drawdown | excess_vs_nikkei |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| post_2007_crisis_2007_2012 | RetailConsumer | 2007-07-31 | 2012-12-31 | 3382.T,8267.T,9983.T | 0.347 | 0.057 | 0.238 | -0.359 | 0.744 |
+| post_2007_crisis_2007_2012 | TelecomInternet | 2007-07-31 | 2012-12-31 | 9432.T,9433.T,4689.T | -0.109 | -0.021 | -0.107 | -0.413 | 0.288 |
+| post_2007_crisis_2007_2012 | Machinery | 2007-07-31 | 2012-12-31 | 6301.T,6367.T,6326.T | -0.143 | -0.028 | -0.086 | -0.616 | 0.255 |
+| post_2007_crisis_2007_2012 | PharmaDefensive | 2007-07-31 | 2012-12-31 | 4502.T,4503.T,4519.T | -0.144 | -0.028 | -0.152 | -0.405 | 0.254 |
+| post_2007_crisis_2007_2012 | RealEstate | 2007-07-31 | 2012-12-31 | 8801.T,8802.T,8830.T | -0.213 | -0.043 | -0.110 | -0.709 | 0.184 |
+| post_2007_crisis_2007_2012 | Autos | 2007-07-31 | 2012-12-31 | 7203.T,7201.T,7267.T,7261.T | -0.377 | -0.084 | -0.229 | -0.667 | 0.020 |
+| post_2007_crisis_2007_2012 | TradingCompanies | 2007-07-31 | 2012-12-31 | 8058.T,8031.T,8001.T,8002.T | -0.383 | -0.085 | -0.266 | -0.666 | 0.015 |
+| post_2007_crisis_2007_2012 | ElectronicsPrecision | 2007-07-31 | 2012-12-31 | 6758.T,6501.T,6702.T,7735.T | -0.503 | -0.121 | -0.323 | -0.693 | -0.106 |
+| post_2007_crisis_2007_2012 | SteelNonferrous | 2007-07-31 | 2012-12-31 | 5401.T,5411.T,5713.T,5801.T | -0.658 | -0.180 | -0.520 | -0.749 | -0.260 |
+| post_2007_crisis_2007_2012 | Banks | 2007-07-31 | 2012-12-31 | 8306.T,8316.T,8411.T | -0.669 | -0.185 | -0.500 | -0.752 | -0.272 |
+| post_2007_crisis_2007_2012 | Securities | 2007-07-31 | 2012-12-31 | 8604.T,8601.T | -0.673 | -0.186 | -0.415 | -0.827 | -0.275 |
+| post_2007_crisis_2007_2012 | Utilities | 2007-07-31 | 2012-12-31 | 9501.T,9502.T,9503.T | -0.677 | -0.188 | -0.597 | -0.800 | -0.280 |
+| post_gfc_recovery_2009_2012 | RealEstate | 2009-03-31 | 2012-12-31 | 8801.T,8802.T,8830.T | 1.252 | 0.242 | 0.699 | -0.339 | 0.970 |
+| post_gfc_recovery_2009_2012 | TradingCompanies | 2009-03-31 | 2012-12-31 | 8058.T,8031.T,8001.T,8002.T | 0.802 | 0.170 | 0.685 | -0.246 | 0.520 |
+| post_gfc_recovery_2009_2012 | Machinery | 2009-03-31 | 2012-12-31 | 6301.T,6367.T,6326.T | 0.774 | 0.165 | 0.627 | -0.244 | 0.492 |
+| post_gfc_recovery_2009_2012 | RetailConsumer | 2009-03-31 | 2012-12-31 | 3382.T,8267.T,9983.T | 0.752 | 0.161 | 0.860 | -0.205 | 0.471 |
+| post_gfc_recovery_2009_2012 | Autos | 2009-03-31 | 2012-12-31 | 7203.T,7201.T,7267.T,7261.T | 0.594 | 0.132 | 0.390 | -0.323 | 0.312 |
+| post_gfc_recovery_2009_2012 | ElectronicsPrecision | 2009-03-31 | 2012-12-31 | 6758.T,6501.T,6702.T,7735.T | 0.513 | 0.117 | 0.343 | -0.449 | 0.231 |
+| post_gfc_recovery_2009_2012 | PharmaDefensive | 2009-03-31 | 2012-12-31 | 4502.T,4503.T,4519.T | 0.316 | 0.076 | 0.530 | -0.189 | 0.034 |
+| post_gfc_recovery_2009_2012 | TelecomInternet | 2009-03-31 | 2012-12-31 | 9432.T,9433.T,4689.T | 0.251 | 0.062 | 0.379 | -0.128 | -0.031 |
+| post_gfc_recovery_2009_2012 | Securities | 2009-03-31 | 2012-12-31 | 8604.T,8601.T | 0.158 | 0.040 | 0.093 | -0.634 | -0.124 |
+| post_gfc_recovery_2009_2012 | Banks | 2009-03-31 | 2012-12-31 | 8306.T,8316.T,8411.T | 0.041 | 0.011 | 0.038 | -0.446 | -0.240 |
+| post_gfc_recovery_2009_2012 | SteelNonferrous | 2009-03-31 | 2012-12-31 | 5401.T,5411.T,5713.T,5801.T | -0.045 | -0.012 | -0.038 | -0.599 | -0.327 |
+| post_gfc_recovery_2009_2012 | Utilities | 2009-03-31 | 2012-12-31 | 9501.T,9502.T,9503.T | -0.600 | -0.217 | -0.601 | -0.759 | -0.882 |
+
+2007年型では、金融・不動産・証券のような信用拡張レバレッジ領域は崩れやすい。一方、底打ち後の局面では、外需製造、素材、商社、内需の一部が戻りやすいかを確認する必要がある。つまりITバブル後のような明確な資金受け皿が出るまで、モメンタムは防御寄りになりやすい。
+
+## レジーム別
+
+| regime | state | ff_japan_wml | jp_tsmom_12m_skip1 |
+| --- | --- | --- | --- |
+| low_nikkeivi_proxy | False | -0.050 | -0.020 |
+| low_nikkeivi_proxy | True | 0.054 | 0.181 |
+| low_vix | False | 0.016 | -0.072 |
+| low_vix | True | -0.018 | 0.219 |
+| nikkei_topix_ratio_up_6m | False | 0.014 | 0.047 |
+| nikkei_topix_ratio_up_6m | True | -0.043 | 0.094 |
+| sox_up_6m | False | -0.023 | -0.065 |
+| sox_up_6m | True | 0.015 | 0.129 |
+| tse_reform_period | False | -0.005 | 0.038 |
+| tse_reform_period | True | 0.045 | 0.234 |
+| yen_weakening_6m | False | -0.000 | 0.006 |
+| yen_weakening_6m | True | -0.002 | 0.133 |
+
+円安6か月トレンド、SOX上昇、低VIX、日経VI proxy低下、日経/TOPIX比率上昇、2023年以降ダミーがオンの局面で、日本株TSMOMまたは日本WMLの年率リターンが改善するかを確認した。すべてが独立因子ではなく、2023年以降は同時点灯しやすいため因果ではなく条件付き記述として扱う。
+
+## 仮説への回答
+
+- H1: 概ね支持。長期のBroad Japan WMLは弱いが、近年のTime-Series Momentumとテーマ株内Momentumは明確に強い。
+- H2: 概ね支持。ただし海外投資家売買動向は未取得。日経VIはNKVIF先物または仮想VI proxyの条件付き検証であり、公式日経VIの完全系列ではない。
+- H3: 支持。日本株はMomentum不在市場ではなく、条件付きでMomentumが出る市場と見るのが妥当。
+
+## Qiita記事草案
+
+タイトル案: 日本株はまだ「モメンタム例外市場」なのか 2023年以降の半導体・円安・東証改革レジームで再検証
+
+構成:
+1. 問題設定: 日本株Momentum例外説と2023年以降の違和感
+2. MomentumをTime-SeriesとCross-Sectionalに分ける
+3. データと制約: Fama-French WML、Yahoo Finance指数、テーマ株プロキシ
+4. Time-Series Momentumの市場別比較
+5. Cross-Sectional MomentumのBroad Japanとテーマ株比較
+6. 円安・SOX・低VIX・東証改革レジーム
+7. 結論: 日本は例外市場ではなく条件付きMomentum市場
+8. 次の課題: TOPIX500構成銘柄、配当込み、売買コスト、海外投資家フロー、日経VI
+
+## GitHub research note構成
+
+- `README.md`: 主張、再現方法、主要チャート
+- `data/`: 生データ取得元とキャッシュ
+- `notebooks/`: 探索分析
+- `scripts/revalidate_japan_momentum_regime.py`: 再現スクリプト
+- `outputs/tables/`: TSMOM、CSMOM、レジーム別CSV
+- `outputs/figures/`: ダッシュボード図
+- `docs/research_note.md`: 文献整理、方法、結果、限界
+
+## 生成ファイル
+
+- `tsmom_summary.csv`
+- `tsmom_periods.csv`
+- `cross_section_summary.csv`
+- `cross_section_periods.csv`
+- `regime_conditioning.csv`
+- `event_window_synthetic_vi.csv`
+- `post_it_bubble_sector_rotation_2002_2005.csv`
+- `post_it_bubble_sector_rotation_2002_2005.png`
+- `post_1987_to_1989_sector_rotation.csv`
+- `post_1987_to_1989_sector_rotation.png`
+- `post_2007_sector_rotation.csv`
+- `post_2007_sector_rotation_2007_2012.png`
+- `post_gfc_recovery_sector_rotation_2009_2012.png`
+- `japan_momentum_regime_dashboard.png`
+- `long_term_synthetic_nikkeivi.png`

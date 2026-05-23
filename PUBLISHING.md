@@ -1,56 +1,63 @@
 # Publishing Notes
 
-## GitHub initialization
+This repository should contain only public research artifacts.
 
-Replace `YOUR_HANDLE` with the actual GitHub handle.
+## Public-only rule
 
-```bash
-mkdir calendar-labels-market-regimes
-cd calendar-labels-market-regimes
+Commit only:
 
-mkdir -p paper results figures
+- Markdown research notes
+- methodology and limitation notes
+- derived figures
+- aggregated result tables
+- sanitized script notes
 
-touch README.md
-touch paper/calendar_labels_market_instability_regimes_v0_1.md
-touch figures/README.md
-touch LICENSE
-touch CITATION.cff
-touch .gitignore
+Do not commit:
 
-git init
-git config user.name "pyon"
-git config user.email "PUBLIC_EMAIL_OR_GITHUB_NOREPLY_EMAIL"
-git add .
-git commit -m "Initial research note v0.1"
-git branch -M main
-git remote add origin git@github.com:YOUR_HANDLE/calendar-labels-market-regimes.git
-git push -u origin main
-```
+- `.env`
+- API keys
+- raw J-Quants responses
+- raw vendor files
+- full price caches
+- credentials
+- notebooks with local paths or hidden tokens
+- personal email addresses unless intentionally public
 
-## Anonymous publishing checklist
+## Local pre-publish checklist
 
-- Confirm no real name is included.
-- Confirm no affiliation name is included.
-- Confirm no email address is included unless it is a public or GitHub noreply email.
-- Confirm no local PC username or local absolute path is included.
-- Confirm CSV and Markdown files contain no personal information.
-- If a PDF is added later, inspect its author and creator metadata before release.
-- Use repository-local Git config:
+Run these checks before pushing:
 
 ```bash
-git config user.name "pyon"
-git config user.email "PUBLIC_EMAIL_OR_GITHUB_NOREPLY_EMAIL"
+git status --short
+find . -type f | grep -Ei '(\.env|token|secret|price_cache|jquants_|raw_data|private)'
+grep -RInE --exclude=PUBLISHING.md '([J]QUANTS_API_KEY|[Rr]efresh[Tt]oken|[Ii]d[Tt]oken|[Pp]assword|mailaddress|gmail\.com)' .
 ```
 
-## Twitter teaser
+Expected result: no sensitive files in the git index.
+
+## Repository rename
+
+Recommended public repository name:
 
 ```text
-水星逆行を「相場予測シグナル」ではなく、カレンダーラベルとして再検証しました。
-
-結果、水星逆行単独のAUCは0.531と弱く、説明力の本体はVIX・MOVE・金利・ドルなどで構成した市場不安定レジーム側にありました。
-
-星が相場を動かすのではなく、人間がショック後に星へ意味を貼る。
-
-GitHub research note v0.1:
-calendar-labels-market-regimes
+market-regime-research-notes
 ```
+
+If renaming the existing GitHub repository, update the remote URL after the GitHub-side rename:
+
+```bash
+git remote set-url origin git@github.com:pyon-3/market-regime-research-notes.git
+```
+
+## Publishing stance
+
+The repository presents research notes, not trading systems.
+
+Every note should clearly separate:
+
+- hypothesis
+- data construction
+- proxy limitations
+- descriptive results
+- interpretation
+- non-advice disclaimer

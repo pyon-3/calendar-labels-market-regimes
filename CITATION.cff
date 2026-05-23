@@ -1,5 +1,5 @@
 cff-version: 1.2.0
-title: "Calendar Labels and Market Instability Regimes: A Case Study of Mercury Retrograde"
+title: "Market Regime Research Notes"
 message: "If you use or discuss this work, please cite this repository."
 type: dataset
 authors:
@@ -12,5 +12,7 @@ keywords:
   - volatility
   - calendar anomalies
   - Mercury retrograde
+  - Japanese equities
+  - momentum
   - behavioral finance
   - anomaly detection
